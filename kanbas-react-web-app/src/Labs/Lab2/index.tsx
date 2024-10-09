@@ -1,4 +1,8 @@
 import BackgroundColors from "./BackgroundColors";
+import BootstrapForms from "./BootstrapForms";
+import BootstrapGrids from "./BootstrapGrids";
+import BootstrapLists from "./BootstrapLists";
+import BootstrapTables from "./BootstrapTables";
 import Borders from "./Borders";
 import Corners from "./Corners";
 import Dimensions from "./Dimensions";
@@ -10,13 +14,20 @@ import "./index.css";
 import Margins from "./Margins";
 import Padding from "./Padding";
 import Positions from "./Positions";
+import ReactIconsSampler from "./ReactIcons";
+import ScreenSizeLabel from "./ScreenSizeLabel";
 import Zindex from "./Zindex";
 export default function Lab2() {
   return (
-    <div id="wd-lab2">
+    <div className="container">
       <h2>Lab 2 - Cascading Style Sheets</h2>
       <h3>Styling with the STYLE attribute</h3>
-      …
+      <p>
+        Style attribute allows configuring look and feel
+        right on the element. Although it's very convenient
+        it is considered bad practice and you should avoid
+        using the style attribute
+      </p>
       <div id="wd-css-id-selectors">
         <h3>ID selectors</h3>
         <p id="wd-id-selector-1">
@@ -69,6 +80,12 @@ export default function Lab2() {
       <Float />
       <GridLayout />
       <Flex />
+      <ReactIconsSampler />
+      <BootstrapGrids />
+      <ScreenSizeLabel />
+      <BootstrapTables />
+      <BootstrapLists />
+      <BootstrapForms />
     </div>
   );
 }
