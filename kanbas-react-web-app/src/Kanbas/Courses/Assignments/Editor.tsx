@@ -77,7 +77,7 @@ export default function AssignmentEditor() {
           </div>
           <div className="mb-3 row">
             <div className="col-3 text-end">
-              <label htmlFor="wd-submission-type">Submission Type</label>
+              <label htmlFor="wd-submission-type">Assign</label>
             </div>
             <div className="col-9">
               <div className="border rounded p-2">
