@@ -153,7 +153,6 @@ export default function BootstrapForms() {
             Sign in </button>
         </form>
       </div>
-
     </div>
   )
 }
