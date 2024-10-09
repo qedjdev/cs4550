@@ -2,7 +2,6 @@ body {
   margin: 0;
   padding: 0;
 }
-
 body * {
   font-family: Arial, Helvetica, sans-serif;
 }
@@ -11,4 +10,40 @@ body * {
   #wd-kanbas .wd-main-content-offset {
     padding-left: 140px !important;
   }
+}
+
+.list-group.wd > .list-group-item.active {
+  color: black;
+  background-color: white;
+  border-left: 3px solid black !important;
+}
+.btn-secondary {
+  --bs-btn-color: #000 !important;
+  --bs-btn-bg: #c7cdd1 !important;
+  --bs-btn-border-color: #c7cdd1 !important;
+  --bs-btn-hover-color: #fff !important;
+}
+.bg-secondary {
+  --bs-secondary-rgb: 199, 205, 209;
+}
+.list-group-item {
+  --bs-list-group-border-color: gray;
+}
+.wd-lesson {
+  border-left: 3px solid green !important;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  display: none;
+  -webkit-appearance: none;
+}
+
+.position-absolute i {
+  font-size: 1.2rem;
+  pointer-events: none;
+  color: #6c757d;
+}
+
+.sidebar-group-item-ov .text-center .border-0 .bg-black .text-white:active {
+  background-color: white;
 }
