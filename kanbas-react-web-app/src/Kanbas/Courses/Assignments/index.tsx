@@ -20,10 +20,11 @@ export default function Assignments() {
           <button id="wd-add-assignment" className="btn btn-m rounded-1 me-1 btn-secondary">+ Assignment</button>
         </div>
       </div>
-      <ul id="wd-assignment-list" className="p-2">
+
+      <ul id="wd-assignment-list" className="p-2 lh-sm">
         <li className="wd-module list-group-item p-0 mb-5 fs-5 border-gray">
           <div className="wd-title p-3 ps-2 bg-secondary">
-            <div className="d-flex justify-content-between">
+            <div className="d-flex fw-bold text-dark fs-4 justify-content-between">
               <div>
                 <BsGripVertical className="me-2 fs-3" />
                 <VscTriangleDown className="fs-6" />
@@ -45,7 +46,7 @@ export default function Assignments() {
               <div className="col p-1 me-1">
                 <a className="wd-assignment-link fs-4 fw-bold text-dark text-decoration-none"
                   href="#/Kanbas/Courses/1234/Assignments/123">
-                  A1 - ENV + HTML
+                  A1
                 </a>
                 <br />
                 <span className="fs-6">
@@ -63,7 +64,7 @@ export default function Assignments() {
               <div className="col p-1 me-1">
                 <a className="wd-assignment-link fs-4 fw-bold text-dark text-decoration-none"
                   href="#/Kanbas/Courses/1234/Assignments/123">
-                  A2 - CSS + BOOTSTRAP
+                  A2
                 </a>
                 <br />
                 <span className="fs-6">
@@ -81,7 +82,7 @@ export default function Assignments() {
               <div className="col p-1 me-1">
                 <a className="wd-assignment-link fs-4 fw-bold text-dark text-decoration-none"
                   href="#/Kanbas/Courses/1234/Assignments/123">
-                  A3 - JAVASCRIPT + REACT
+                  A3
                 </a>
                 <br />
                 <span className="fs-6">
