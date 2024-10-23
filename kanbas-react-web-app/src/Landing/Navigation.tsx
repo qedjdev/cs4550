@@ -9,6 +9,6 @@ export default function Navigation() {
       <Link to="/Labs/Lab2" id="wd-labs-link">Lab 2</Link><br/>
       <Link to="/Labs/Lab3" id="wd-labs-link">Lab 3</Link><br/>
       </ul>
-      <a href="https://github.com/qedjdev/cs4550/tree/a1" id="wd-a1-repo">source code</a><br />
+      <a href="https://github.com/qedjdev/cs4550/tree/a3" id="wd-a1-repo">source code</a><br />
     </div>
 );}
