@@ -1,6 +1,5 @@
-import coursesData from "./courses.json";
-import modulesData from "./modules.json";
-import assignmentsData from "./assignments.json";
-export const courses = coursesData;
-export const modules = modulesData;
-export const assignments = assignmentsData;
+export { default as courses } from "./courses.json";
+export { default as modules } from "./modules.json";
+export { default as assignments } from "./assignments.json";
+export { default as users } from "./users.json";
+export { default as enrollments } from "./enrollments.json";
