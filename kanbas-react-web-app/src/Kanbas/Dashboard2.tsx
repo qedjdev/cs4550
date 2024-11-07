@@ -3,6 +3,13 @@ import * as db from "./Database";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import FacultyOnlyComponent from "./Account/ProtectedButton";
+import NonFacultyRoute from "./Account/NonFacultyRoute";
+
+type Enrollment = {
+  _id: string;
+  user: string;
+  course: string;
+};
 
 export default function Dashboard(
   { courses, course, setCourse, addNewCourse,
@@ -14,20 +21,41 @@ export default function Dashboard(
     }) {
 
   const { currentUser } = useSelector((state: any) => state.accountReducer);
-  const { enrollments } = db;
+  const [sessionEnrollments, setSessionEnrollments] = useState<Enrollment[]>(db.enrollments);
 
   const [filterEnrollments, setFilterEnrollments] = useState(false);
 
+  const handleEnroll = (courseId: any) => {
+    if (!sessionEnrollments.some(enrollment => enrollment.user === currentUser._id && enrollment.course === courseId)) {
+      const newEnrollment: Enrollment = {
+        _id: Date.now().toString(), // Using current timestamp as a unique ID
+        user: currentUser._id,
+        course: courseId,
+      };
+      setSessionEnrollments([...sessionEnrollments, newEnrollment]);
+    }
+  };
+
+  const handleUnenroll = (courseId: any) => {
+    setSessionEnrollments(
+      sessionEnrollments.filter(
+        enrollment => !(enrollment.user === currentUser._id && enrollment.course === courseId)
+      )
+    );
+  };
+
   return (
     <div id="wd-dashboard">
-      <div>
-        <h1 id="wd-dashboard-title">Dashboard</h1> <hr />
-        <button id="wd-toggle-enrollments-click"
-          onClick={() => setFilterEnrollments(!filterEnrollments)}
-          className="btn btn-primary me-2 float-end" >
-          Enrollments
-        </button>
-      </div>
+      <NonFacultyRoute>
+        <div>
+          <h1 id="wd-dashboard-title">Dashboard</h1> <hr />
+          <button id="wd-toggle-enrollments-click"
+            onClick={() => setFilterEnrollments(!filterEnrollments)}
+            className="btn btn-primary me-2 float-end" >
+            Enrollments
+          </button>
+        </div>
+      </NonFacultyRoute>
       <FacultyOnlyComponent>
         <h5>New Course
           <button className="btn btn-primary float-end"
@@ -47,7 +75,7 @@ export default function Dashboard(
         Published Courses ({
           courses.filter(course =>
             !filterEnrollments ||
-            enrollments.some(enrollment =>
+            sessionEnrollments.some(enrollment =>
               enrollment.user === currentUser._id && enrollment.course === course._id
             )
           ).length
@@ -58,18 +86,18 @@ export default function Dashboard(
           {courses
             .filter(course =>
               !filterEnrollments ||
-              enrollments.some(
+              sessionEnrollments.some(
                 enrollment =>
                   enrollment.user === currentUser._id &&
                   enrollment.course === course._id
               )
             )
             .map(course => {
-              const isEnrolled = enrollments.some(
+              const isEnrolled = sessionEnrollments.some(
                 enrollment => enrollment.user === currentUser._id && enrollment.course === course._id
               );
               return (
-                <div className="wd-dashboard-course col" style={{ width: "300px" }}>
+                <div className="wd-dashboard-course col" style={{ width: "300px" }} key={course._id}>
                   <div className="card rounded-3 overflow-hidden">
                     <Link to={`/Kanbas/Courses/${course._id}/Home`}
                       className="wd-dashboard-course-link text-decoration-none text-dark" >
@@ -83,38 +111,33 @@ export default function Dashboard(
                         <p className="wd-dashboard-course-title card-text overflow-y-hidden" style={{ maxHeight: 100 }}>
                           {course.description} </p>
                         <button className="btn btn-primary"> Go </button>
-
-                        {(isEnrolled && !filterEnrollments) ? (
-                          <button
-                            onClick={(event) => {
-                              event.preventDefault();
-                              unenrollFromCourse(course._id);
-                            }}
-                            className="btn btn-danger float-end"
-                            id="wd-unenroll-course-click"
-                          >
-                            Unenroll
-                          </button>
-                        ) : (
-                          null
-                        )}
-                        {(!isEnrolled && !filterEnrollments) ? (
-                          <button
-                            onClick={(event) => {
-                              event.preventDefault();
-                              enrollInCourse(course._id);
-                            }}
-                            className="btn btn-success float-end"
-                            id="wd-enroll-course-click"
-                          >
-                            Enroll
-                          </button>
-                        ) : (
-                          null
-                        )}
-
-
-
+                        <NonFacultyRoute>
+                          {isEnrolled && !filterEnrollments ? (
+                            <button
+                              onClick={(event) => {
+                                event.preventDefault();
+                                handleUnenroll(course._id);
+                              }}
+                              className="btn btn-danger float-end"
+                              id="wd-unenroll-course-click"
+                            >
+                              Unenroll
+                            </button>
+                          ) : (
+                            !isEnrolled && !filterEnrollments && (
+                              <button
+                                onClick={(event) => {
+                                  event.preventDefault();
+                                  handleEnroll(course._id);
+                                }}
+                                className="btn btn-success float-end"
+                                id="wd-enroll-course-click"
+                              >
+                                Enroll
+                              </button>
+                            )
+                          )}
+                        </NonFacultyRoute>
                         <FacultyOnlyComponent>
                           <button onClick={(event) => {
                             event.preventDefault();

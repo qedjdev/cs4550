@@ -7,6 +7,7 @@ import { Navigate, Route, Routes, useLocation, useParams } from "react-router";
 import { FaAlignJustify } from "react-icons/fa";
 import PeopleTable from "./People/Table";
 import { courses } from "../Database";
+import PreventUnregisteredNonFaculty from "./PreventUnregisteredNonFaculty";
 export default function Courses({ courses }: { courses: any[]; }) {
   const { cid } = useParams();
   const course = courses.find((course) => course._id === cid);
@@ -22,13 +23,15 @@ export default function Courses({ courses }: { courses: any[]; }) {
           <CoursesNavigation />
         </div>
         <div className="flex-fill">
-          <Routes>
-            <Route path="Home" element={<Home />} />
-            <Route path="Modules" element={<Modules />} />
-            <Route path="Assignments" element={<Assignments />} />
-            <Route path="Assignments/:aid" element={<AssignmentEditor />} />
-            <Route path="People" element={<PeopleTable />} />
-          </Routes>
+          <PreventUnregisteredNonFaculty>
+            <Routes>
+              <Route path="Home" element={<Home />} />
+              <Route path="Modules" element={<Modules />} />
+              <Route path="Assignments" element={<Assignments />} />
+              <Route path="Assignments/:aid" element={<AssignmentEditor />} />
+              <Route path="People" element={<PeopleTable />} />
+            </Routes>
+          </PreventUnregisteredNonFaculty>
         </div></div>
     </div>
   );

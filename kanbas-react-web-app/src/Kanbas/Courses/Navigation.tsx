@@ -1,5 +1,6 @@
 import { Link, useLocation, useParams } from "react-router-dom";
 import { courses } from "../Database";
+import PreventUnregisteredNonFaculty from "./PreventUnregisteredNonFaculty";
 export default function CoursesNavigation() {
   const location = useLocation();
   const { cid } = useParams();
