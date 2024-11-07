@@ -1,3 +1,4 @@
+import FacultyOnlyComponent from "../../Account/ProtectedButton";
 import Modules from "../Modules";
 import CourseStatus from "./Status";
 export default function Home() {
@@ -6,9 +7,11 @@ export default function Home() {
       <div className="flex-fill me-4">
         <Modules />
       </div>
-      <div className="d-none d-md-block">
-        <CourseStatus />
-      </div>
+      <FacultyOnlyComponent>
+        <div className="d-none d-md-block">
+          <CourseStatus />
+        </div>
+      </FacultyOnlyComponent>
     </div>
   );
 }

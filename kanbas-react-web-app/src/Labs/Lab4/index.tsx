@@ -10,6 +10,7 @@ import PassingDataOnEvent from "./PassingDataOnEvent";
 import PassingFunctions from "./PassingFunctions";
 import ReduxExamples from "./ReduxExamples";
 import StringStateVariables from "./StringStateVariables";
+import Abc from "./X1";
 
 export default function Lab4() {
   function sayHello() {
@@ -32,6 +33,8 @@ export default function Lab4() {
       <ArrayStateVariable />
       <ParentStateComponent />
       <ReduxExamples />
+      <h4>Exam 1 Scratchpad</h4>
+      <Abc />
     </div>
   );
 }
