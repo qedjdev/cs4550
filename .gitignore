@@ -1,2 +1,3 @@
 /node_modules
 .DS_Store
+/kanbas-node-server-app/node_modules/
