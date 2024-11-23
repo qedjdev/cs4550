@@ -1,132 +1,134 @@
-import { BsGripVertical } from "react-icons/bs";
-import { FaMagnifyingGlass } from "react-icons/fa6";
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate, Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { setAssignments, deleteAssignment } from "./reducer";
+import { BsTrash, BsThreeDotsVertical } from "react-icons/bs";
+import { FaMagnifyingGlass, FaTrash } from "react-icons/fa6";
+import * as client from "./client";
+import LessonControlButtons from "../Modules/LessonControlButtons";
+import FacultyOnlyComponent from "../../Account/ProtectedButton";
 import { MdOutlineAssignment } from "react-icons/md";
-import { FaCaretDown } from "react-icons/fa";
 import { IoEllipsisVertical } from "react-icons/io5";
-import { GoPlus } from "react-icons/go";
-import { useParams } from "react-router";
-import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
 import AssignmentControlButtons from "./AssignmentControls";
-import { deleteAssignment } from "./reducer";
+
+interface Assignment {
+  _id: string;
+  title: string;
+  course: string;
+  description?: string;
+  dueDate?: string;
+  points?: number;
+}
 
 export default function Assignments() {
-  const { cid } = useParams();
-  const { assignments } = useSelector((state: any) => state.assignmentsReducer);
-  const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
   const dispatch = useDispatch();
 
-  return (
-    <div id="wd-assignments">
-      <div className="d-flex justify-content-between align-items-center">
-        <div className="input-group w-25 inline">
-          <button className="input-group-text bg-white border-end-0">
-            <FaMagnifyingGlass className="fs-5 mb-1 text-secondary" />
-          </button>
-          <input
-            id="wd-search-assignment"
-            className="form-control p-2"
-            placeholder="Search..."
-          />
-        </div>
+  const splitPath = pathname.split('/');
+  const courseId = splitPath[splitPath.length - 2];
 
-        {currentUser.role === "FACULTY" && (
-          <div>
-            <button
-              id="wd-add-assignment-group"
-              className="btn btn-secondary btn-lg mt-0 me-1 float-end"
-            >
-              <GoPlus className="fs-3 me-1" />
+  const { assignments } = useSelector((state: any) => {
+    return state.assignmentsReducer;
+  });
+
+  const fetchAssignments = async () => {
+    const assignments = await client.findAssignmentsForCourse(courseId);
+    dispatch(setAssignments(assignments));
+  };
+
+  useEffect(() => {
+    if (courseId) {
+      fetchAssignments();
+    }
+  }, [courseId]);
+
+  const handleDelete = async (assignmentId: string) => {
+    if (window.confirm("Are you sure you want to delete this assignment?")) {
+      await client.deleteAssignment(assignmentId);
+      dispatch(deleteAssignment(assignmentId));
+    }
+  };
+
+  return (
+    <div id="wd-assignments" className="container">
+      <div className="row align-items-center mb-3">
+        <div className="col-4 position-relative">
+          <div className="input-group">
+            <span className="input-group-text bg-transparent">
+              <FaMagnifyingGlass />
+            </span>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Search for Assignment"
+            />
+          </div>
+        </div>
+        <div className="col-3"></div>
+        <div className="col-5 text-end">
+          <FacultyOnlyComponent>
+            <button className="btn btn-light border-dark me-2">
               Group
             </button>
-            <Link
-              id="wd-add-assignment"
-              className="btn btn-danger btn-lg me-1 float-end"
-              to="./NewAssignment"
+            <button
+              className="btn btn-danger me-2"
+              onClick={() => navigate(`/Kanbas/Courses/${courseId}/Assignments/new`)}
             >
-              <GoPlus className="fs-3 me-1" />
-              Assignment
-            </Link>
-          </div>
-        )}
+              <i className="fas fa-plus"></i> Assignment
+            </button>
+          </FacultyOnlyComponent>
+        </div>
       </div>
-      <ul className="mt-5 list-group rounded-0">
-        <li className="list-group-item p-0 fs-5">
-          <p id="wd-assignments-title" className="p-3 ps-2 bg-secondary mb-0">
-            <BsGripVertical className="me-2 fs-3" />
-            <FaCaretDown className="me-2 fs-3" />
-            ASSIGNMENTS
-            <IoEllipsisVertical className="fs-4 float-end" />
-            {currentUser.role === "FACULTY" && (
-              <button className="border-0 bg-secondary float-end">
-                <GoPlus className="fs-3 me-2" />
-              </button>
-            )}
-            <span className="border border-black p-1 rounded-pill span float-end">
-              40% of Total
-            </span>
-          </p>
-        </li>
-        <ul id="wd-assignment-list" className="list-group rounded-0">
-          {assignments
-            .filter((assignment: any) => assignment.course === cid)
-            .map((assignment: any) => (
-              <li
-                className="wd-assignment-list-item list-group-item p-3 ps-1 d-flex align-items-center justify-content-between"
-                key={assignment.id}
-              >
-                <div className="d-flex align-items-center justify-content-between">
-                  <BsGripVertical className="me-2 fs-3" />
-                  <MdOutlineAssignment className="fs-3 mb-1 me-3 text-success" />
-                  <div>
-                    <a
-                      className="wd-assignment-link text-decoration-none fs-5 text-black"
-                      href={
-                        currentUser.role === "FACULTY"
-                          ? `#/Kanbas/Courses/${cid}/Assignments/${assignment._id}`
-                          : `#/Kanbas/Courses/${cid}/Assignments/`
-                      }
-                    >
-                      {assignment.title}
-                    </a>
-                    <br />
-                    <span className="text-danger">
-                      Multiple Modules{" "}
-                    </span> |{" "}
-                    <span>
-                      <strong>Not available until </strong>
-                      {new Date(assignment.available).toLocaleDateString(
-                        "en-US",
-                        {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                        }
-                      )}{" "}
-                    </span>
-                    |{" "}
-                    <span>
-                      <strong>Due </strong>
-                      {new Date(assignment.due).toLocaleDateString(
-                        "en-US",
-                        {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                        }
-                      )}{" "}
-                    </span>{" "}
-                    | <span>{assignment.points}</span>
-                  </div>
-                </div>
-                <AssignmentControlButtons
-                  deleteAssignment={() =>
-                    dispatch(deleteAssignment(assignment._id))
-                  }
-                />
-              </li>
-            ))}
-        </ul>
+
+      <div className="bg-secondary p-3">
+        <h3 id="wd-assignments-title" className="d-flex justify-content-between align-items-center mb-0">
+          <span>
+            <IoEllipsisVertical className="me-2" /> ASSIGNMENTS
+          </span>
+          <div className="d-flex align-items-center">
+            <span className="me-3">40% of Total</span>
+            <FacultyOnlyComponent>
+              <div className="dropdown d-inline">
+                <button
+                  className="btn btn-secondary"
+                  type="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <BsThreeDotsVertical />
+                </button>
+                <ul className="dropdown-menu">
+                  <li><a className="dropdown-item" href="#">Edit</a></li>
+                  <li><a className="dropdown-item" href="#">Speed Grader</a></li>
+                </ul>
+              </div>
+            </FacultyOnlyComponent>
+          </div>
+        </h3>
+      </div>
+
+      <ul id="wd-assignment-list" className="list-group rounded-0">
+        {assignments.map((assignment: Assignment) => (
+          <li key={assignment._id} className="list-group-item d-flex align-items-center">
+            <IoEllipsisVertical className="me-2" />
+            <MdOutlineAssignment className="text-success me-2" />
+            <Link to={`/Kanbas/Courses/${courseId}/Assignments/${assignment._id}`} className="flex-grow-1" style={{ textDecoration: 'none', color: 'inherit' }}>
+              {assignment.title}
+            </Link>
+            <span className="text-danger mx-2">Multiple Modules</span> |
+            <span className="ms-2"><b>Due:</b> {assignment.dueDate || 'No due date'}</span> &nbsp;|
+            <span className="ms-2">{assignment.points || 100} pts&nbsp;</span>
+            <FacultyOnlyComponent>
+              <AssignmentControlButtons
+                deleteAssignment={() =>
+                  dispatch(deleteAssignment(assignment._id))
+                }
+              />
+
+            </FacultyOnlyComponent>
+          </li>
+        ))}
       </ul>
     </div>
   );
